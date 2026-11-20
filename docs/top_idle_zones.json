@@ -1,0 +1,134 @@
+[
+  {
+    "vehicle_id": "V0014",
+    "geohash": "ttnc3q",
+    "date": "2026-01-04",
+    "window_start": "2026-01-04 08:30:00",
+    "ping_count": 6,
+    "idle_pings": 5,
+    "distance_km": 1.399,
+    "avg_speed_kmh": 7.17,
+    "idle_ratio": 0.833
+  },
+  {
+    "vehicle_id": "V0010",
+    "geohash": "ttndwq",
+    "date": "2026-01-02",
+    "window_start": "2026-01-02 06:30:00",
+    "ping_count": 6,
+    "idle_pings": 5,
+    "distance_km": 1.272,
+    "avg_speed_kmh": 7.29,
+    "idle_ratio": 0.833
+  },
+  {
+    "vehicle_id": "V0000",
+    "geohash": "ttndkf",
+    "date": "2026-01-01",
+    "window_start": "2026-01-01 08:30:00",
+    "ping_count": 6,
+    "idle_pings": 5,
+    "distance_km": 0.786,
+    "avg_speed_kmh": 4.62,
+    "idle_ratio": 0.833
+  },
+  {
+    "vehicle_id": "V0004",
+    "geohash": "ttnf6k",
+    "date": "2026-01-02",
+    "window_start": "2026-01-02 06:30:00",
+    "ping_count": 5,
+    "idle_pings": 4,
+    "distance_km": 1.81,
+    "avg_speed_kmh": 11.83,
+    "idle_ratio": 0.8
+  },
+  {
+    "vehicle_id": "V0011",
+    "geohash": "ttncu8",
+    "date": "2026-01-05",
+    "window_start": "2026-01-05 09:30:00",
+    "ping_count": 5,
+    "idle_pings": 4,
+    "distance_km": 2.109,
+    "avg_speed_kmh": 13.42,
+    "idle_ratio": 0.8
+  },
+  {
+    "vehicle_id": "V0030",
+    "geohash": "ttncns",
+    "date": "2026-01-02",
+    "window_start": "2026-01-02 09:30:00",
+    "ping_count": 5,
+    "idle_pings": 4,
+    "distance_km": 0.579,
+    "avg_speed_kmh": 3.79,
+    "idle_ratio": 0.8
+  },
+  {
+    "vehicle_id": "V0000",
+    "geohash": "ttndjs",
+    "date": "2026-01-01",
+    "window_start": "2026-01-01 07:30:00",
+    "ping_count": 5,
+    "idle_pings": 4,
+    "distance_km": 0.898,
+    "avg_speed_kmh": 6.19,
+    "idle_ratio": 0.8
+  },
+  {
+    "vehicle_id": "V0031",
+    "geohash": "ttnc44",
+    "date": "2026-01-02",
+    "window_start": "2026-01-02 08:30:00",
+    "ping_count": 5,
+    "idle_pings": 4,
+    "distance_km": 1.753,
+    "avg_speed_kmh": 11.22,
+    "idle_ratio": 0.8
+  },
+  {
+    "vehicle_id": "V0012",
+    "geohash": "ttn8xp",
+    "date": "2026-01-04",
+    "window_start": "2026-01-04 06:30:00",
+    "ping_count": 5,
+    "idle_pings": 4,
+    "distance_km": 0.663,
+    "avg_speed_kmh": 4.4,
+    "idle_ratio": 0.8
+  },
+  {
+    "vehicle_id": "V0011",
+    "geohash": "ttnbse",
+    "date": "2026-01-01",
+    "window_start": "2026-01-01 09:30:00",
+    "ping_count": 5,
+    "idle_pings": 4,
+    "distance_km": 2.116,
+    "avg_speed_kmh": 13.37,
+    "idle_ratio": 0.8
+  },
+  {
+    "vehicle_id": "V0018",
+    "geohash": "ttnfjx",
+    "date": "2026-01-03",
+    "window_start": "2026-01-03 10:30:00",
+    "ping_count": 5,
+    "idle_pings": 4,
+    "distance_km": 0.958,
+    "avg_speed_kmh": 5.86,
+    "idle_ratio": 0.8
+  },
+  {
+    "vehicle_id": "V0029",
+    "geohash": "ttnc8d",
+    "date": "2026-01-01",
+    "window_start": "2026-01-01 09:30:00",
+    "ping_count": 5,
+    "idle_pings": 4,
+    "distance_km": 0.872,
+    "avg_speed_kmh": 6.04,
+    "idle_ratio": 0.8
+  }
+]

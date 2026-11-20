@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fleet Telemetry Aggregator — Spark Demo</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --panel: #1a222c;
+      --text: #e7ecf1;
+      --muted: #9aa7b5;
+      --accent: #3d9cf0;
+      --good: #3ecf8e;
+      --line: #2a3542;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+      background: radial-gradient(1200px 600px at 10% -10%, #1b2a3a 0%, var(--bg) 55%);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    main { max-width: 980px; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
+    h1 { font-size: 1.85rem; margin: 0 0 0.4rem; letter-spacing: -0.02em; }
+    .sub { color: var(--muted); margin-bottom: 1.75rem; max-width: 46rem; }
+    .links a {
+      color: var(--accent);
+      margin-right: 1rem;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .links a:hover { text-decoration: underline; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.75rem;
+      margin: 1.5rem 0 2rem;
+    }
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 0.9rem 1rem;
+    }
+    .stat .label { color: var(--muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    .stat .value { font-size: 1.35rem; font-weight: 700; margin-top: 0.2rem; }
+    h2 { font-size: 1.15rem; margin: 2rem 0 0.75rem; }
+    p { color: var(--muted); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      font-size: 0.9rem;
+    }
+    th, td { padding: 0.65rem 0.75rem; text-align: left; border-bottom: 1px solid var(--line); }
+    th { color: var(--muted); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.03em; }
+    tr:last-child td { border-bottom: none; }
+    .pill {
+      display: inline-block;
+      background: rgba(61, 156, 240, 0.15);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 0.15rem 0.55rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .ok { color: var(--good); }
+    code { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 0.85em; }
+    ol { color: var(--muted); padding-left: 1.2rem; }
+    ol li { margin-bottom: 0.35rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Fleet Telemetry Aggregator</h1>
+    <p class="sub">
+      Live demo of a <strong style="color:var(--text)">PySpark</strong> batch pipeline that turns partitioned vehicle GPS events
+      into geohash / time-window idle-zone and distance metrics — the same analytical pattern used to keep heavy scans off an OLTP path.
+    </p>
+    <p class="links">
+      <a href="https://github.com/gargv837/fleet-telemetry-spark">Source code</a>
+      <a href="top_idle_zones.csv">Download sample aggregates (CSV)</a>
+      <a href="stats.json">Raw stats (JSON)</a>
+    </p>
+
+    <div class="grid" id="stats"></div>
+
+    <h2>Pipeline</h2>
+    <ol>
+      <li>Ingest date-partitioned GPS events (<code>date=YYYY-MM-DD/</code>)</li>
+      <li>Derive geohash buckets + 1-hour windows; flag idle pings (speed &lt; 3 km/h)</li>
+      <li>Window-lag distance between consecutive pings per vehicle (shuffle by <code>vehicle_id</code>)</li>
+      <li>Aggregate idle ratio / distance / speed; write partitioned Parquet</li>
+    </ol>
+
+    <h2>Highest idle-ratio zones <span class="pill">ping_count ≥ 5</span></h2>
+    <p>Sample of the Spark job output — full Parquet aggregates are produced locally via <code>src/aggregate_telemetry.py</code>.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Vehicle</th>
+          <th>Geohash</th>
+          <th>Date</th>
+          <th>Window</th>
+          <th>Pings</th>
+          <th>Idle</th>
+          <th>Dist km</th>
+          <th>Avg speed</th>
+          <th>Idle ratio</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </main>
+  <script>
+    async function load() {
+      const [stats, rows] = await Promise.all([
+        fetch("stats.json").then(r => r.json()),
+        fetch("top_idle_zones.json").then(r => r.json()),
+      ]);
+      const cards = [
+        ["Input events", stats.input_events.toLocaleString()],
+        ["Vehicles", stats.vehicles],
+        ["Days", stats.days],
+        ["Aggregate rows", stats.aggregate_rows.toLocaleString()],
+        ["Geohash buckets", stats.geohash_buckets.toLocaleString()],
+        ["Distance (km)", stats.total_distance_km.toLocaleString()],
+        ["Avg idle ratio", stats.avg_idle_ratio],
+      ];
+      document.getElementById("stats").innerHTML = cards.map(([label, value]) =>
+        `<div class="stat"><div class="label">${label}</div><div class="value">${value}</div></div>`
+      ).join("");
+      document.getElementById("rows").innerHTML = rows.map(r => `
+        <tr>
+          <td>${r.vehicle_id}</td>
+          <td><code>${r.geohash}</code></td>
+          <td>${r.date}</td>
+          <td>${String(r.window_start).slice(11, 16)}</td>
+          <td>${r.ping_count}</td>
+          <td>${r.idle_pings}</td>
+          <td>${Number(r.distance_km).toFixed(2)}</td>
+          <td>${Number(r.avg_speed_kmh).toFixed(1)}</td>
+          <td class="ok">${Number(r.idle_ratio).toFixed(2)}</td>
+        </tr>`).join("");
+    }
+    load().catch(err => {
+      document.getElementById("stats").innerHTML = `<p>Failed to load demo data: ${err}</p>`;
+    });
+  </script>
+</body>
+</html>

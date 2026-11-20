@@ -1,0 +1,10 @@
+{
+  "vehicles": 50,
+  "aggregate_rows": 25930,
+  "days": 5,
+  "geohash_buckets": 5157,
+  "total_pings": 37500,
+  "total_distance_km": 45730.3,
+  "avg_idle_ratio": 0.109,
+  "input_events": 37500
+}
